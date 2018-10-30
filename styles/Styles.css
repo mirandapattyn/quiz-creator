@@ -1,0 +1,12 @@
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
+
+ .easy {
+     color: blue;
+ }
+
+ .hard {
+     color: red;
+ }
