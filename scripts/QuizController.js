@@ -23,6 +23,6 @@ QuizController.prototype = {
     },
 
     storeQuiz: function (sender, args) {
-        this.model.storeQuiz(args.questionDiv);
+        this.model.storeQuiz(args.title, args.questionDiv);
     }
 };

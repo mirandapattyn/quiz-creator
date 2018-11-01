@@ -6,9 +6,7 @@ MongoClient.connect(uri, (err, client) => {
 
     let express = require('express'),
         path = require('path'),
-        bodyParser = require('body-parser'),
-        mongoose = require('mongoose'),
-        crypto = require('crypto');
+        bodyParser = require('body-parser');
 
     let app = express();
 
@@ -48,27 +46,7 @@ MongoClient.connect(uri, (err, client) => {
             if (err) throw err;
             res.send(result);
         });
-    });
-
-    mongoose.Promise = global.Promise;
-
-    var userSchema = new mongoose.Schema({
-        userName: {
-          type: String,
-          unique: true,
-          required: true
-        },
-        hash: String,
-        salt: String
-    });
-
-    userSchema.methods.setPassword = function(password) {
-        this.salt = crypto.randomBytes(16).toString('hex');
-        this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
-    };
-
-    let User = mongoose.model("User", userSchema);
-    module.exports = User;  
+    }); 
 
     app.listen(8081);
 });

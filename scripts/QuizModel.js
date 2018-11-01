@@ -5,13 +5,14 @@ var QuizModel = function (collection) {
 
 QuizModel.prototype = {
 
-    storeQuiz: function (questionDiv) {
+    storeQuiz: function (title, questionDiv) {
+        let store = true;
         this.questions = [];
         let questionList = questionDiv[0].childNodes;
-        let questionJSON = "{\"questions\": [";
+        let questionJSON = "{\"title\": \""
+            + title + "\", \"questions\": [";
 
-        for(i = 0; i < questionList.length; i++)
-        {
+        for(i = 0; i < questionList.length; i++) {
             let q = questionList[i].getElementsByClassName("questionText")[0].value;
             let a0 = questionList[i].getElementsByClassName("answer0")[0].value;
             let a1 = questionList[i].getElementsByClassName("answer1")[0].value;
@@ -20,6 +21,12 @@ QuizModel.prototype = {
 
             let correct = this.getCorrect(questionList[i]);
             let difficulty = this.getDifficulty(questionList[i]);
+
+            if (q == "" || a0 == "" || a1 == "" || a2 == "" || a3 == "" 
+                || correct == -1 || difficulty == -1 || title == "") {
+                store = false;
+                break;
+            }
            
             this.questions[i] = "{\"question\": \"" 
                 + q + "\", \"answer0\": \""
@@ -32,49 +39,53 @@ QuizModel.prototype = {
 
             questionJSON += this.questions[i];    
             
-            if (i != questionList.length - 1)
-            {
+            if (i != questionList.length - 1) {
                 questionJSON += ", ";
             }
         }
 
         questionJSON += "]}";
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "/store_quiz", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("data=" + questionJSON);
+        if (store == true) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/store_quiz", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("data=" + questionJSON);
+            console.log("Quiz Store Succeeded");
+        } else {
+            console.log("Quiz Store Failed");
+        }
 
         this.storeQuizEvent.notify();
     },
 
     getCorrect: function(qList) {
-        if (qList.getElementsByClassName("radio0")[0].checked == true) 
-        {
+        if (qList.getElementsByClassName("radio0")[0].checked == true) {
             return 0;
         }
-        else if (qList.getElementsByClassName("radio1")[0].checked == true) 
-        {
+        else if (qList.getElementsByClassName("radio1")[0].checked == true) {
             return 1;
         }
-        else if (qList.getElementsByClassName("radio2")[0].checked == true) 
-        {
+        else if (qList.getElementsByClassName("radio2")[0].checked == true) {
             return 2;
         }
-        else if (qList.getElementsByClassName("radio3")[0].checked == true) 
-        {
+        else if (qList.getElementsByClassName("radio3")[0].checked == true) {
             return 3;
+        }
+        else {
+            return -1;
         }
     },
 
     getDifficulty: function(qList) {
-        if (qList.getElementsByClassName("easy")[0].checked == true)
-        {
+        if (qList.getElementsByClassName("easy")[0].checked == true) {
             return 0;
         } 
-        else if (qList.getElementsByClassName("hard")[0].checked == true)
-        {
+        else if (qList.getElementsByClassName("hard")[0].checked == true) {
             return 1;
+        }
+        else {
+            return -1;
         }
     }
 };

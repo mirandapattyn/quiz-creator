@@ -15,10 +15,14 @@ QuizView.prototype = {
 
     createChildren: function () {
         this.$container = $('.container');
+        this.$title = this.$container.find('.title');
         this.$question = this.$container.find('.question');
+        this.$add = this.$container.find('.add');
         this.$save = this.$container.find('.save');
 
+        this.initTitle();
         this.initQuestion();
+        this.initAdd();
         this.initSave();
 
         return this;
@@ -34,9 +38,19 @@ QuizView.prototype = {
 
     enable: function () {
         this.$addButton.onclick = this.addQuestionHandler;
+        this.$deleteButton.onclick = this.deleteQuestionHandler;
         this.$saveButton.onclick = this.storeQuizHandler;
 
         return this;
+    },
+
+    initTitle: function() {
+        this.$titleText = document.createElement("INPUT");
+        this.$titleText.setAttribute("type", "text");
+        this.$titleText.setAttribute("placeholder", "Title");
+        this.$titleText.setAttribute("size", "30");
+
+        this.$title.append(this.$titleText);
     },
 
     initQuestion: function() {
@@ -61,10 +75,9 @@ QuizView.prototype = {
 
         d.append(document.createElement("BR"))
 
-        this.radio++;
+        this.initDeleteButton(d);
 
-        this.initAddButton(d);
-        d.append(document.createElement("BR"))
+        this.radio++;
         this.$question.append(d);
     },
 
@@ -111,13 +124,23 @@ QuizView.prototype = {
         div.append(document.createElement("BR"));
     },
 
-    initAddButton: function(div) {
+    initDeleteButton: function(div) {
+        this.$deleteButton = document.createElement("BUTTON");
+        this.$deleteButton.setAttribute("class", "btn btn-primary");
+        this.$deleteButton.innerHTML = "Delete Question";
+        this.$deleteButton.onclick = this.deleteQuestionHandler;
+
+        div.append(this.$deleteButton);
+        div.append(document.createElement("BR"));
+    },
+
+    initAdd: function() {
         this.$addButton = document.createElement("BUTTON");
         this.$addButton.setAttribute("class", "btn btn-primary");
+        this.$addButton.setAttribute("id", "addBTN");
         this.$addButton.innerHTML = "Add Question";
 
-        div.append(this.$addButton);
-        div.append(document.createElement("BR"));
+        this.$add.append(this.$addButton);
     },
 
     initSave: function() {
@@ -130,15 +153,7 @@ QuizView.prototype = {
     },
 
     addQuestion: function() {
-        this.initDeleteButton();
         this.initQuestion();
-        this.$addButton.onclick = this.addQuestionHandler;
-    },
-
-    initDeleteButton: function() {
-        this.$addButton.setAttribute("class", "btn btn-primary");
-        this.$addButton.innerHTML = "Delete Question";
-        this.$addButton.onclick = this.deleteQuestionHandler;
     },
 
     deleteQuestion: function(sender) {
@@ -148,6 +163,7 @@ QuizView.prototype = {
 
     storeQuiz: function () {
         this.storeQuizEvent.notify({
+            title: this.$titleText.value,
             questionDiv: this.$question
         });
     },
