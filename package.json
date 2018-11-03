@@ -6,7 +6,8 @@
     "dependencies": {
       "hbs": "*",
       "body-parser": "^1.17.1",
-      "express": "^3.21.1"
+      "express": "^3.21.1",
+      "mongodb": "^2.2.36"
     },
     "scripts": {
       "start": "node app.js"
