@@ -1,21 +1,24 @@
 <!doctype html>
 <html>
     <head>
-        <title>Quiz</title>
+        <title>Quiz Creator</title>
         <link rel="stylesheet" href="../styles/bootstrap.min.css">
-        <link rel="stylesheet" href="../styles/Styles.css">
+        <link rel="stylesheet" href="../styles/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="../scripts/EventDispatcher.js"></script>
-        <script src="../scripts/UserModel.js"></script>
-        <script src="../scripts/UserView.js"></script>
-        <script src="../scripts/UserController.js"></script>
+        <script src="../scripts/Model/UserModel.js"></script>
+        <script src="../scripts/View/UserView.js"></script>
+        <script src="../scripts/Controller/UserController.js"></script>
         <script src="../scripts/UserApp.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <div class="container">
+            <div class="select"></div>
             <div class="question"></div>
-            <div class="submit"></div>
+            <div class="buttons"></div>
+            <div class="score"></div>
+            <div class="logout"></div>
         </div>
     </body>
 </html>
