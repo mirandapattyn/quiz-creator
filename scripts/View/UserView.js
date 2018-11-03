@@ -21,9 +21,12 @@ UserView.prototype = {
         this.$question = this.$container.find('.question');
         this.$buttons = this.$container.find('.buttons');
         this.$score = this.$container.find('.score');
-        
+        this.$logout = this.$container.find('.logout');
+
+        this.checkLogin();
         this.getTitles();
         this.initButtons();
+        this.initLogout();
 
         return this;
     },
@@ -32,6 +35,7 @@ UserView.prototype = {
         this.selectQuizHandler = this.selectQuiz.bind(this);
         this.submitQuizHandler = this.submitQuiz.bind(this);
         this.retryQuizHandler = this.retryQuiz.bind(this);
+        this.logoutHandler = this.logout.bind(this);
 
         return this;
     },
@@ -40,6 +44,7 @@ UserView.prototype = {
         this.$selectButton.onclick = this.selectQuizHandler;
         this.$submitButton.onclick = this.submitQuizHandler;
         this.$retryButton.onclick = this.retryQuizHandler;
+        this.$logoutButton.onclick = this.logoutHandler;
 
         return this;
     },
@@ -86,6 +91,14 @@ UserView.prototype = {
         $(this.$buttons).hide();
     },
 
+    initLogout: function() {
+        this.$logoutButton = document.createElement("BUTTON");
+        this.$logoutButton.setAttribute("class", "btn btn-primary");
+        this.$logoutButton.innerHTML = "Logout";
+
+        this.$logout.append(this.$logoutButton);
+    },
+
     selectQuiz: function() {
         $(this.$question).empty();
         this.initQuestions();
@@ -105,8 +118,6 @@ UserView.prototype = {
                     break;
                 }
             }
-
-            console.log(data[i]);
 
             for (i = 0; i < questions.length; i++)
             {
@@ -246,5 +257,16 @@ UserView.prototype = {
             radios[i].setAttribute("disabled", true);
         }
         this.displayScoreEvent.notify();
+    },
+
+    checkLogin: function () {
+        if (sessionStorage.getItem("userType") != 2) {
+            this.logout();
+        }
+    },
+
+    logout: function() {
+        sessionStorage.clear();
+        window.location.href = '/login';
     }
 };

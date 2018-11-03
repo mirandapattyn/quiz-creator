@@ -140,15 +140,15 @@ LoginView.prototype = {
     },
 
     register: function() {
-        let type = -1;
+        let type = 0;
         if (this.$registerRadio[0].checked == true) {
-            type = 0;
-        }
-        else if (this.$registerRadio[1].checked == true) {
             type = 1;
         }
+        else if (this.$registerRadio[1].checked == true) {
+            type = 2;
+        }
 
-        if (type != -1 && this.$registerUN.value != "" && this.$registerPW.value != "" && this.$name !="") {
+        if (type != 0 && this.$registerUN.value != "" && this.$registerPW.value != "" && this.$name != "") {
             this.registerEvent.notify({
                 usertype: type,
                 name: this.$name.value,
@@ -161,15 +161,15 @@ LoginView.prototype = {
     },
 
     login: function () {
-        let type = -1;
+        let type = 0;
         if (this.$loginRadio[0].checked == true) {
-            type = 0;
-        }
-        else if (this.$loginRadio[1].checked == true) {
             type = 1;
         }
+        else if (this.$loginRadio[1].checked == true) {
+            type = 2;
+        }
 
-        if (type != -1 && this.$loginUN.value != "" && this.$loginPW.value != "") {
+        if (type != 0 && this.$loginUN.value != "" && this.$loginPW.value != "") {
             this.loginEvent.notify({
                 usertype: type,
                 username: this.$loginUN.value,

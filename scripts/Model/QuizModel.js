@@ -1,6 +1,37 @@
 var QuizModel = function (collection) {
     this.collection = collection;
     this.storeQuizEvent = new Event(this);
+    this.deleteQuizEvent = new Event(this);
+
+    this.retrieveTitles = new Promise((resolve) => {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                this.titles = this.responseText;
+                this.titles = JSON.parse(this.titles);
+
+                resolve(this.titles);
+                return this.titles;
+            }
+        };
+        xhttp.open("POST", "/retrieve_titles", true);
+        xhttp.send();
+    });
+
+    this.retrieveQuiz = new Promise((resolve) => {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                this.questions = this.responseText;
+                this.questions = JSON.parse(this.questions);
+
+                resolve(this.questions);
+                return this.questions;
+            }
+        };
+        xhttp.open("POST", "/retrieve_quiz", true);
+        xhttp.send();
+    });
 };
 
 QuizModel.prototype = {
@@ -10,7 +41,8 @@ QuizModel.prototype = {
         this.questions = [];
         let questionList = questionDiv[0].childNodes;
         let questionJSON = "{\"title\": \""
-            + title + "\", \"questions\": [";
+            + title + "\", \"user\": \""
+            + sessionStorage.getItem("userID") + "\", \"questions\": [";
 
         for(i = 0; i < questionList.length; i++) {
             let q = questionList[i].getElementsByClassName("questionText")[0].value;
@@ -51,10 +83,7 @@ QuizModel.prototype = {
             xhttp.open("POST", "/store_quiz", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("data=" + questionJSON);
-            console.log("Quiz Store Succeeded");
-        } else {
-            console.log("Quiz Store Failed");
-        }
+        } 
 
         this.storeQuizEvent.notify();
     },
@@ -85,5 +114,14 @@ QuizModel.prototype = {
         } else {
             return -1;
         }
+    },
+
+    deleteQuiz: function(title) {
+        let titleJSON = "{\"title\": \"" + title + "\"}";
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/delete_quiz", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("data=" + titleJSON);
     }
 };

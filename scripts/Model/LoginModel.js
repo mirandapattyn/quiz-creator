@@ -2,6 +2,12 @@ var LoginModel = function (collection) {
     this.collection = collection;
     this.registerEvent = new Event(this);
     this.loginEvent = new Event(this);
+
+    if (sessionStorage.getItem("userType") == 1) {
+        window.location.href = '/admin';
+    } else if (sessionStorage.getItem("userType") == 2) {
+        window.location.href = '/user';
+    } 
 };
 
 LoginModel.prototype = {
@@ -14,10 +20,24 @@ LoginModel.prototype = {
             + password + "\"}";
 
         var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "/store_user", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("data=" + registerJSON);
-        
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText) {
+                    //error message
+                } else {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "/store_user", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("data=" + registerJSON);
+
+                    location.reload();
+                }
+            }
+        };
+        xhttp.open("POST", "/check_username", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("data=" + registerJSON);
+
         this.registerEvent.notify();
     },
 
@@ -31,7 +51,10 @@ LoginModel.prototype = {
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText) {
-                        if (JSON.parse(this.responseText).type == 0) {
+                        let response = JSON.parse(this.responseText);
+                        sessionStorage.setItem("userID", response._id);
+                        sessionStorage.setItem("userType", response.type);
+                        if (response.type == 1) {
                             window.location.href = '/admin';
                         } else {
                             window.location.href = '/user';

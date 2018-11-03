@@ -16,7 +16,7 @@ var UserModel = function() {
         };
         xhttp.open("POST", "/retrieve_titles", true);
         xhttp.send();
-    })
+    });
 
     this.retrieveQuiz = new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
@@ -31,7 +31,7 @@ var UserModel = function() {
         };
         xhttp.open("POST", "/retrieve_quiz", true);
         xhttp.send();
-    })
+    });
 };
 
 UserModel.prototype = { 
