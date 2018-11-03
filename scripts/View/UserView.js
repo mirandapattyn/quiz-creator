@@ -228,8 +228,6 @@ UserView.prototype = {
 
     getScoreList: function() {
         this.model.retrieveScores.then((data) => {
-            console.log(data);
-
             let scoreListUsers = [];
             let scoreListScores = [];
 
@@ -294,6 +292,8 @@ UserView.prototype = {
             answerKey: this.$answerKey,
             questionDiv: this.$question
         });
+
+        this.getScoreList();
     },
 
     displayScore: function(score) {
@@ -318,6 +318,6 @@ UserView.prototype = {
 
     logout: function() {
         sessionStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/';
     }
 };

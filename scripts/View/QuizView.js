@@ -326,6 +326,6 @@ QuizView.prototype = {
 
     logout: function() {
         sessionStorage.clear();
-        window.location.href = '/login';
+        window.location.href = '/';
     }
 };
