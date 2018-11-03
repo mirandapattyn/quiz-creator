@@ -2,6 +2,7 @@ var LoginView = function (model) {
     this.model = model;
     this.registerEvent = new Event(this);
     this.loginEvent = new Event(this);
+    this.errorEvent = new Event(this);
 
     this.init();
 };      
@@ -141,6 +142,7 @@ LoginView.prototype = {
 
     register: function() {
         $(this.$regError).remove();
+        $(this.$usernameError).remove();
         let type = 0;
         if (this.$registerRadio[0].checked == true) {
             type = 1;
@@ -184,5 +186,12 @@ LoginView.prototype = {
             this.$loginError = msg.get();
             this.$login.append(this.$loginError);
         }
+    },
+
+    usernameError(msg) {
+        $(this.$regError).remove();
+        $(this.$usernameError).remove();
+        this.$usernameError = msg.get();
+        this.$register.append(this.$usernameError);
     }
 };

@@ -15,12 +15,14 @@ LoginController.prototype = {
     setupHandlers: function () {
         this.registerHandler = this.register.bind(this);
         this.loginHandler = this.login.bind(this);
+        this.errorHandler = this.usernameError.bind(this);
         return this;
     },
 
     enable: function () {
         this.view.registerEvent.attach(this.registerHandler);
         this.view.loginEvent.attach(this.loginHandler);
+        this.model.errorEvent.attach(this.errorHandler);
         return this;
     },
 
@@ -30,5 +32,9 @@ LoginController.prototype = {
 
     login: function (sender, args) {
         this.model.login(args.usertype, args.username, args.password);
+    },
+
+    usernameError: function (send, args) {
+        this.view.usernameError(args.msg);
     }
 };

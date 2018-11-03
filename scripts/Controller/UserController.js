@@ -25,7 +25,7 @@ UserController.prototype = {
     },
 
     submitQuiz: function (sender, args) {
-        this.model.submitQuiz(args.answerList, args.questionDiv);
+        this.model.submitQuiz(args.title, args.owner, args.answerList, args.answerKey, args.questionDiv);
     },
 
     displayScore: function (sender, args) {

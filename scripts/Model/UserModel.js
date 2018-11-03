@@ -32,24 +32,29 @@ var UserModel = function() {
         xhttp.open("POST", "/retrieve_quiz", true);
         xhttp.send();
     });
+
+    this.retrieveScores = new Promise((resolve) => {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                this.scores = this.responseText;
+                this.scores = JSON.parse(this.scores);
+
+                resolve(this.scores);
+                return this.scores;
+            }
+        };
+        xhttp.open("POST", "/retrieve_scores", true);
+        xhttp.send();
+    });
 };
 
 UserModel.prototype = { 
-    submitQuiz: function(answerList, questionDiv) {
-        console.log(answerList);
-        let answerKey = [];
-        for (i = 0; i < this.questions.length; i++)
-        {
-            answerKey.push(this.questions[i].correct);
-        }
-
-        console.log(answerKey);
-
+    submitQuiz: function(title, owner, answerList, answerKey, questionDiv) {
         let correct = 0;
 
         for (i = 0; i < answerList.length; i++) {
             if (answerList[i] == answerKey[i]) {
-                this.markCorrect(i, answerList[i], questionDiv);
                 correct++;
             }
             else {
@@ -57,22 +62,21 @@ UserModel.prototype = {
             }
         }
         this.submitQuizEvent.notify();
+
+        let scoreJSON = "{\"user\": \"" 
+        + sessionStorage.getItem("userID") + "\", \"quiz\": \""
+        + title + "\", \"owner\": \""
+        + owner + "\", \"score\": \""
+        + correct + "\"}";
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/save_score", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("data=" + scoreJSON);
+
         this.displayScoreEvent.notify({
             score: correct
         });
-    },
-
-    markCorrect: function(qIndex, answer, div) {
-        let questionList = div[0].childNodes;
-        if (answer == 0) {
-            questionList[qIndex].getElementsByClassName("answer0")[0].style.backgroundColor = "green";
-        } else if (answer == 1) {
-            questionList[qIndex].getElementsByClassName("answer1")[0].style.backgroundColor = "green";
-        } else if (answer == 2) {
-            questionList[qIndex].getElementsByClassName("answer2")[0].style.backgroundColor = "green";
-        } else if (answer == 3) {
-            questionList[qIndex].getElementsByClassName("answer3")[0].style.backgroundColor = "green";
-        }
     },
 
     markIncorrect: function(qIndex, wrong, answer, div) {
