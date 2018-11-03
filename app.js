@@ -85,5 +85,12 @@ MongoClient.connect(uri, (err, client) => {
         });
     });
 
+    app.post('/save_score', (req, res) => {
+        data = JSON.parse(req.body.data);
+        questions.insertOne(data, (err, res) => {
+            if (err) throw err;
+        });
+    });
+
     app.listen(8081);
 });

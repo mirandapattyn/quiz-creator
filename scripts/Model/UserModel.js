@@ -36,11 +36,14 @@ var UserModel = function() {
 
 UserModel.prototype = { 
     submitQuiz: function(answerList, questionDiv) {
+        console.log(answerList);
         let answerKey = [];
         for (i = 0; i < this.questions.length; i++)
         {
             answerKey.push(this.questions[i].correct);
         }
+
+        console.log(answerKey);
 
         let correct = 0;
 

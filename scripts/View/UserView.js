@@ -34,7 +34,7 @@ UserView.prototype = {
     setupHandlers: function () {
         this.selectQuizHandler = this.selectQuiz.bind(this);
         this.submitQuizHandler = this.submitQuiz.bind(this);
-        this.retryQuizHandler = this.retryQuiz.bind(this);
+        this.retryQuizHandler = this.selectQuiz.bind(this);
         this.logoutHandler = this.logout.bind(this);
 
         return this;
@@ -259,9 +259,9 @@ UserView.prototype = {
         });
     },
 
-    retryQuiz: function() {
-        location.reload();
-    },
+    /*retryQuiz: function() {
+        this.initQuestions();
+    },*/
 
     displayScore: function(score) {
         let scoreDisplay = document.createElement("P");
