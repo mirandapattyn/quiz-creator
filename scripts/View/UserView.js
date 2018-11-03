@@ -2,6 +2,8 @@ var UserView = function(model) {
     this.model = model;
     this.radio = 0;
     this.titles = [];
+    this.users = [];
+    this.both = [];
     this.submitQuizEvent = new Event(this);
     this.displayScoreEvent = new Event(this);
 
@@ -22,6 +24,7 @@ UserView.prototype = {
         this.$buttons = this.$container.find('.buttons');
         this.$score = this.$container.find('.score');
         this.$logout = this.$container.find('.logout');
+        this.$scoreList = this.$container.find('.scoreList');
 
         this.checkLogin();
         this.getTitles();
@@ -34,7 +37,7 @@ UserView.prototype = {
     setupHandlers: function () {
         this.selectQuizHandler = this.selectQuiz.bind(this);
         this.submitQuizHandler = this.submitQuiz.bind(this);
-        this.retryQuizHandler = this.retryQuiz.bind(this);
+        this.retryQuizHandler = this.selectQuiz.bind(this);
         this.logoutHandler = this.logout.bind(this);
 
         return this;
@@ -57,6 +60,7 @@ UserView.prototype = {
         this.model.retrieveTitles.then((data) => {
             for (i = 0; i < data.length; i++) {
                 this.titles.push(data[i].title);
+                this.users.push(data[i].user);
             }
 
             this.$dropdown = document.createElement("SELECT");
@@ -109,22 +113,26 @@ UserView.prototype = {
             $(this.$question).empty();
             this.initQuestions();
             $(this.$buttons).show();
+            this.getScoreList();
         }
     },
 
     initQuestions: function() {
         let questions = "";
+        this.$title = this.$dropdown.options[this.$dropdown.selectedIndex].value;
+        this.$user = this.users[this.$dropdown.selectedIndex - 1];
+
         this.model.retrieveQuiz.then((data) => {
             this.model.questions = data;
 
-            let title = this.$dropdown.options[this.$dropdown.selectedIndex].value;
-
             for (i = 0; i < data.length; i++) {
-                if (data[i].title == title) {
+                if (data[i].title == this.$title && data[i].user == this.$user) {
                     questions = data[i].questions;
                     break;
                 }
             }
+
+            this.$answerKey = [];
 
             for (i = 0; i < questions.length; i++)
             {
@@ -199,6 +207,8 @@ UserView.prototype = {
 
                 this.$question.append(d);
                 this.radio++;
+
+                this.$answerKey.push(questions[i].correct);
             }
         });
     },
@@ -214,6 +224,30 @@ UserView.prototype = {
         div.append(radio);
         div.append(textInput);
         div.append(document.createElement("BR"));
+    },
+
+    getScoreList: function() {
+        this.model.retrieveScores.then((data) => {
+            console.log(data);
+
+            let scoreListUsers = [];
+            let scoreListScores = [];
+
+            for (i = 0; i < data.length; i++) {
+                if (data[i].quiz == this.$title && data[i].owner == this.$user) {
+                    scoreListUsers.push(data[i].user);
+                    scoreListScores.push(data[i].score);
+                }
+            }
+
+            $(this.$scoreList).empty();
+            for (i = 0; i < scoreListUsers.length; i++) {
+                let entry = document.createElement("P");
+                entry.setAttribute("class", scoreListScores[i]);
+                entry.innerHTML = scoreListUsers[i] + ": " + scoreListScores[i];
+                this.$scoreList.append(entry);
+            }
+        });
     },
 
     submitQuiz: function() {
@@ -254,16 +288,16 @@ UserView.prototype = {
         }
 
         this.submitQuizEvent.notify({
+            title: this.$title,
+            owner: this.$user,
             answerList: answers,
+            answerKey: this.$answerKey,
             questionDiv: this.$question
         });
     },
 
-    retryQuiz: function() {
-        location.reload();
-    },
-
     displayScore: function(score) {
+        $(this.$score).empty();
         let scoreDisplay = document.createElement("P");
         scoreDisplay.innerHTML = score;
 

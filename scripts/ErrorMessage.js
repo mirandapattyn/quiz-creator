@@ -6,7 +6,8 @@ var ErrorMessage = function (key) {
         'fillInAllReg': 'Fill in all fields before registering',
         'fillInAllLog': 'Fill in all fields before logging in',
         'noQuizLoad': 'No quiz is selected to load',
-        'noQuizDelete': 'No quiz is selected to delete'
+        'noQuizDelete': 'No quiz is selected to delete',
+        'sameUser': 'A user with this username already exists'
     };
 }
 

@@ -2,6 +2,7 @@ var QuizModel = function (collection) {
     this.collection = collection;
     this.storeQuizEvent = new Event(this);
     this.deleteQuizEvent = new Event(this);
+    this.titleErrorEvent = new Event(this);
 
     this.retrieveTitles = new Promise((resolve) => {
         var xhttp = new XMLHttpRequest();
@@ -76,6 +77,8 @@ QuizModel.prototype = {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("data=" + questionJSON);
 
+        location.reload();
+
         this.storeQuizEvent.notify();
     },
 
@@ -107,8 +110,10 @@ QuizModel.prototype = {
         }
     },
 
-    deleteQuiz: function(title) {
-        let titleJSON = "{\"title\": \"" + title + "\"}";
+    deleteQuiz: function(title, user) {
+        let titleJSON = "{\"title\": \"" 
+            + title + "\", \"user\": \"" 
+            + sessionStorage.getItem("userID") + "\"}";
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "/delete_quiz", true);

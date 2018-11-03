@@ -301,7 +301,6 @@ QuizView.prototype = {
                 title: this.$titleText.value,
                 questionDiv: this.$question
             });
-            location.reload();
         }
     },
 

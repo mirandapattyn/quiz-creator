@@ -2,6 +2,7 @@ var LoginModel = function (collection) {
     this.collection = collection;
     this.registerEvent = new Event(this);
     this.loginEvent = new Event(this);
+    this.errorEvent = new Event(this);
 
     if (sessionStorage.getItem("userType") == 1) {
         window.location.href = '/admin';
@@ -15,7 +16,7 @@ LoginModel.prototype = {
     register: function (usertype, name, username, password) {
         let registerJSON = "{\"type\": \"" 
             + usertype + "\", \"name\": \""
-            + name + "\", \"username\": \""
+            + name + "\", \"_id\": \""
             + username + "\", \"password\": \""
             + password + "\"}";
 
@@ -23,7 +24,7 @@ LoginModel.prototype = {
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText) {
-                    //error message
+                    registered = false;
                 } else {
                     var xhttp = new XMLHttpRequest();
                     xhttp.open("POST", "/store_user", true);
@@ -31,6 +32,8 @@ LoginModel.prototype = {
                     xhttp.send("data=" + registerJSON);
 
                     location.reload();
+                    this.registerEvent.notify();
+                    return;
                 }
             }
         };
@@ -38,12 +41,16 @@ LoginModel.prototype = {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("data=" + registerJSON);
 
+        this.errorEvent.notify({
+            msg: new ErrorMessage("sameUser")
+        });
+
         this.registerEvent.notify();
     },
 
     login: function (usertype, username, password) {
         let loginJSON = "{\"type\": \"" 
-            + usertype + "\", \"username\": \""
+            + usertype + "\", \"_id\": \""
             + username + "\", \"password\": \""
             + password + "\"}";
 
