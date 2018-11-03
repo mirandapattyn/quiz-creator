@@ -31,7 +31,7 @@ MongoClient.connect(uri, (err, client) => {
         res.render('user');
     });
 
-    app.get('/login', (req, res) => {
+    app.get('/', (req, res) => {
         res.render('login');
     });
 
