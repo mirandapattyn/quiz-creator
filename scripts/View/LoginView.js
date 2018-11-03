@@ -140,6 +140,7 @@ LoginView.prototype = {
     },
 
     register: function() {
+        $(this.$regError).remove();
         let type = 0;
         if (this.$registerRadio[0].checked == true) {
             type = 1;
@@ -156,11 +157,14 @@ LoginView.prototype = {
                 password: this.$registerPW.value
             });
         } else {
-            console.log("Registration error");
+            msg = new ErrorMessage("fillInAllReg");
+            this.$regError = msg.get();
+            this.$register.append(this.$regError);
         }
     },
 
     login: function () {
+        $(this.$loginError).remove();
         let type = 0;
         if (this.$loginRadio[0].checked == true) {
             type = 1;
@@ -176,7 +180,9 @@ LoginView.prototype = {
                 password: this.$loginPW.value
             });
         } else {
-            console.log("Login error");
+            msg = new ErrorMessage("fillInAllLog");
+            this.$loginError = msg.get();
+            this.$login.append(this.$loginError);
         }
     }
 };

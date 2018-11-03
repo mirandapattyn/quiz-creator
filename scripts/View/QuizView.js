@@ -90,10 +90,6 @@ QuizView.prototype = {
         this.$title.append(this.$titleText);
     },
 
-    addQuestion: function() {
-        this.addQuestion("");
-    },
-
     addQuestion: function(item) {
         let d = document.createElement("DIV");
         let q = document.createElement("TEXTAREA");
@@ -232,6 +228,8 @@ QuizView.prototype = {
     },
 
     selectQuiz: function() {
+        $(this.$noQuizError).remove();
+        $(this.$fillInError).remove();
         $(this.$question).empty();
         this.getQuestions();
     },
@@ -268,18 +266,57 @@ QuizView.prototype = {
     },
 
     storeQuiz: function () {
-        this.storeQuizEvent.notify({
-            title: this.$titleText.value,
-            questionDiv: this.$question
-        });
-        location.reload();
+        $(this.$fillInError).remove();
+        let qList = this.$question[0].childNodes;
+        let store = true;
+
+        let fields = document.getElementsByTagName("INPUT");
+        let quests = document.getElementsByTagName("TEXTAREA");
+        let rCount = 0;
+
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i].value == "") {
+                store = false;
+            } else if (fields[i].checked == true) {
+                rCount++;
+            }
+        }
+
+        for (i = 0; i < quests.length; i++) {
+            if (quests[i].value == "") {
+                store = false;
+            }
+        }
+
+        if (rCount != qList.length * 2) {
+            store = false;
+        }
+
+        if (!store) {
+            msg = new ErrorMessage("fillInAllSave");
+            this.$fillInError = msg.get();
+            this.$save.append(this.$fillInError);
+        } else {
+            this.storeQuizEvent.notify({
+                title: this.$titleText.value,
+                questionDiv: this.$question
+            });
+            location.reload();
+        }
     },
 
     deleteQuiz: function () {
-        this.deleteQuizEvent.notify({
-            title: this.$titleText.value
-        });
-        location.reload();
+        $(this.$noQuizError).remove();
+        if (this.$dropdown.selectedIndex == 0) {
+            msg = new ErrorMessage("noQuizDelete");
+            this.$noQuizError = msg.get();
+            this.$save.append(this.$noQuizError);
+        } else {
+            this.deleteQuizEvent.notify({
+                title: this.$titleText.value
+            });
+            location.reload();
+        }
     }, 
 
     checkLogin: function () {
