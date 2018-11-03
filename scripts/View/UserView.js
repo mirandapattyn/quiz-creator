@@ -100,9 +100,16 @@ UserView.prototype = {
     },
 
     selectQuiz: function() {
-        $(this.$question).empty();
-        this.initQuestions();
-        $(this.$buttons).show();
+        $(this.$noQuizError).remove();
+        if (this.$dropdown.selectedIndex == 0) {
+            msg = new ErrorMessage("noQuizLoad");
+            this.$noQuizError = msg.get();
+            this.$select.append(this.$noQuizError);
+        } else {
+            $(this.$question).empty();
+            this.initQuestions();
+            $(this.$buttons).show();
+        }
     },
 
     initQuestions: function() {
@@ -210,6 +217,7 @@ UserView.prototype = {
     },
 
     submitQuiz: function() {
+        $(this.$answerQError).remove();
         let answers = [];
 
         for (i = 0; i < this.$question[0].childNodes.length; i++)
@@ -233,7 +241,16 @@ UserView.prototype = {
                 answer = 3;
             }
 
-            answers.push(answer);
+            if (answer != -1) {
+                answers.push(answer);
+            }
+        }
+
+        if (answers.length != this.$question[0].childNodes.length) {
+            msg = new ErrorMessage("answerAllQ");
+            this.$answerQError = msg.get();
+            this.$buttons.append(this.$answerQError);
+            return;
         }
 
         this.submitQuizEvent.notify({

@@ -37,7 +37,6 @@ var QuizModel = function (collection) {
 QuizModel.prototype = {
 
     storeQuiz: function (title, questionDiv) {
-        let store = true;
         this.questions = [];
         let questionList = questionDiv[0].childNodes;
         let questionJSON = "{\"title\": \""
@@ -53,12 +52,6 @@ QuizModel.prototype = {
 
             let correct = this.getCorrect(questionList[i]);
             let difficulty = this.getDifficulty(questionList[i]);
-
-            if (q == "" || a0 == "" || a1 == "" || a2 == "" || a3 == "" 
-                || correct == -1 || difficulty == -1 || title == "") {
-                store = false;
-                break;
-            }
            
             this.questions[i] = "{\"question\": \"" 
                 + q + "\", \"answer0\": \""
@@ -78,12 +71,10 @@ QuizModel.prototype = {
 
         questionJSON += "]}";
 
-        if (store == true) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "/store_quiz", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("data=" + questionJSON);
-        } 
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/store_quiz", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("data=" + questionJSON);
 
         this.storeQuizEvent.notify();
     },

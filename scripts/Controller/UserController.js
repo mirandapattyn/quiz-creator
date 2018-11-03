@@ -29,7 +29,6 @@ UserController.prototype = {
     },
 
     displayScore: function (sender, args) {
-        console.log(args.score);
         this.view.displayScore(args.score);
     }
 };
