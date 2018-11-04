@@ -8,7 +8,8 @@ MongoClient.connect(uri, (err, client) => {
 
     let express = require('express'),
         path = require('path'),
-        bodyParser = require('body-parser');
+        bodyParser = require('body-parser'),
+        crypto = require('crypto');
 
     let app = express();
 
@@ -37,6 +38,9 @@ MongoClient.connect(uri, (err, client) => {
 
     app.post('/store_user', (req, res) => {
         data = JSON.parse(req.body.data);
+        let cipher = crypto.createCipher('aes-256-ecb', 'mypassword');
+        data.password = cipher.update(data.password, 'utf8', 'hex') + cipher.final('hex');
+        console.log(data);
         users.insertOne(data, (err, res) => {
             if (err) throw err;
         });
@@ -52,6 +56,8 @@ MongoClient.connect(uri, (err, client) => {
 
     app.post('/check_login', (req, res) => {
         data = JSON.parse(req.body.data);
+        let cipher = crypto.createCipher('aes-256-ecb', 'mypassword');
+        data.password = cipher.update(data.password, 'utf8', 'hex') + cipher.final('hex');
         users.findOne({type: data.type, _id: data._id, password: data.password}, (err, result) => {
             if (err) throw err;
                 res.send(result);

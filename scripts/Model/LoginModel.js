@@ -24,7 +24,7 @@ LoginModel.prototype = {
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText) {
-                    registered = false;
+                    this.sendError();
                 } else {
                     var xhttp = new XMLHttpRequest();
                     xhttp.open("POST", "/store_user", true);
@@ -41,11 +41,13 @@ LoginModel.prototype = {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("data=" + registerJSON);
 
+        this.registerEvent.notify();
+    },
+
+    sendError() {
         this.errorEvent.notify({
             msg: new ErrorMessage("sameUser")
         });
-
-        this.registerEvent.notify();
     },
 
     login: function (usertype, username, password) {
