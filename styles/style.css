@@ -3,11 +3,28 @@
     box-shadow: none;
  }
 
+ .btn {
+    margin: 10px;
+    text-align: center;
+ }
+
+ #logout {
+    margin: 2px;
+    float: right;
+ }
+
+ #scoreTitle {
+     font-weight: bold;
+     font-size: 25px;
+ }
+
  .easy {
+     font-size: 12px;
      color: blue;
  }
 
  .hard {
+     font-size: 12px;
      color: red;
  }
 
@@ -15,3 +32,80 @@
      color: red;
      font-weight: bold;
  }
+
+ .dropdown {
+     width: 150px;
+ }
+
+ .select {
+     text-align: center;
+ }
+
+ .buttons {
+     text-align: center;
+ }
+
+ .question {
+     margin-left: 30%;
+ }
+
+ #quizTitle {
+     font-weight: bold;
+     font-size: 30px;
+ }
+
+ .questionText {
+     font-weight: bold;
+     font-size: 15px;
+ }
+
+ .diffLevel {
+     font-size: 12px;
+ }
+
+ .letter {
+     font-family: monospace;
+ }
+
+ .scoreList {
+     margin-top: 20%;
+     text-align: center;
+ }
+
+ .loginHeader {
+     font-size: 30px;
+     font-weight: bold;
+ }
+
+ .register {
+     text-align: center;
+ }
+
+ .login {
+     text-align: center;
+ }
+
+ .field {
+     margin-top: 10px;
+ }
+
+
+.label {
+    font-weight: bold;
+}
+
+.title {
+    margin-left: 15%;
+}
+
+.save {
+    text-align: center;
+}
+
+.add {
+    text-align: center;
+}
+
+.questions {
+    margin-left: 15%;
+}

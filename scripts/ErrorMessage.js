@@ -1,13 +1,13 @@
 var ErrorMessage = function (key) {
     this._key = key;
     this.messages = {
-        'answerAllQ': 'Answer all questions before submitting',
-        'fillInAllSave': 'Fill in all fields before saving quiz',
-        'fillInAllReg': 'Fill in all fields before registering',
-        'fillInAllLog': 'Fill in all fields before logging in',
-        'noQuizLoad': 'No quiz is selected to load',
-        'noQuizDelete': 'No quiz is selected to delete',
-        'sameUser': 'A user with this username already exists'
+        'answerAllQ': '<br>Answer all questions before submitting',
+        'fillInAllSave': '<br>Fill in all fields before saving quiz',
+        'fillInAllReg': '<br>Fill in all fields before registering',
+        'fillInAllLog': '<br>Fill in all fields before logging in',
+        'noQuizLoad': '<br>No quiz is selected to load',
+        'noQuizDelete': '<br>No quiz is selected to delete',
+        'sameUser': '<br>A user with this username already exists'
     };
 }
 
