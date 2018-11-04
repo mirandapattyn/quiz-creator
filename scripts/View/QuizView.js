@@ -15,12 +15,11 @@ QuizView.prototype = {
     },
 
     createChildren: function () {
-        this.$container = $('.container');
+        this.$container = $('.container-fluid');
         this.$select = this.$container.find('.select');
         this.$title = this.$container.find('.title');
-        this.$question = this.$container.find('.question');
-        this.$add = this.$container.find('.add');
-        this.$save = this.$container.find('.save');
+        this.$question = this.$container.find('.questions');
+        this.$buttons = this.$container.find('.buttons');
         this.$logout = this.$container.find('.logout');
 
         this.checkLogin();
@@ -63,6 +62,7 @@ QuizView.prototype = {
 
         this.model.retrieveTitles.then((data) => {
             this.$dropdown = document.createElement("SELECT");
+            this.$dropdown.setAttribute("class", "dropdown");
             let selectOption = document.createElement("OPTION");
             selectOption.innerHTML = "New Quiz";
             this.$dropdown.append(selectOption);
@@ -83,25 +83,33 @@ QuizView.prototype = {
     },
 
     initTitle: function() {
+        let label = document.createElement("SPAN");
+        label.setAttribute("class", "label");
+        label.innerHTML = "Quiz Title:&nbsp;"
         this.$titleText = document.createElement("INPUT");
         this.$titleText.setAttribute("type", "text");
-        this.$titleText.setAttribute("size", "30");
+        this.$titleText.setAttribute("size", "35");
 
+        this.$title.append(label);
         this.$title.append(this.$titleText);
     },
 
     addQuestion: function(item) {
         let d = document.createElement("DIV");
+        let label = document.createElement("SPAN");
+        label.setAttribute("class", "label");
+        label.innerHTML = "Question:&nbsp;"
         let q = document.createElement("TEXTAREA");
         q.setAttribute("type", "text");
-        q.setAttribute("class", "questionText");
+        q.setAttribute("class", "field questionText");
         q.setAttribute("rows", "2");
-        q.setAttribute("cols", "40");
+        q.setAttribute("cols", "35");
 
         if (item != "") {
             q.innerHTML = item.question;
         }
 
+        d.append(label);
         d.append(q);
         d.append(document.createElement("BR"));
 
@@ -135,6 +143,23 @@ QuizView.prototype = {
     },
 
     addAnswerOption: function(div, index, value, correct) {
+        let letter = "0";
+        switch (index) {
+            case (0): letter = "a)";
+            break;
+            case (1): letter = "b)";
+            break;
+            case (2): letter = "c)";
+            break;
+            case (3): letter = "d)";
+            break;
+            default: letter = "ERROR";
+        }
+
+        let label = document.createElement("SPAN");
+        label.setAttribute("class", "label letter");
+        label.innerHTML = letter + "&nbsp;";
+
         let radio = document.createElement("INPUT");
         radio.setAttribute("type", "radio");
         radio.setAttribute("class", "radio" + index);
@@ -146,10 +171,11 @@ QuizView.prototype = {
 
         let textInput = document.createElement("INPUT");
         textInput.setAttribute("type", "text");
-        textInput.setAttribute("class", "answer" + index);
+        textInput.setAttribute("class", "field answer" + index);
         textInput.setAttribute("value", value);
         textInput.setAttribute("size", "30");
 
+        div.append(label);
         div.append(radio);
         div.append(textInput);
         div.append(document.createElement("BR"));
@@ -157,14 +183,15 @@ QuizView.prototype = {
 
     addDifficulty: function(div, selected) {
         let text = document.createElement("SPAN");
+        text.setAttribute("class", "label");
         let radio = document.createElement("INPUT");
         let easy = document.createElement("SPAN");
         let radio2 = document.createElement("INPUT");
         let hard = document.createElement("SPAN");
 
-        text.innerHTML = "Difficulty: ";
-        easy.innerHTML = "Easy";
-        hard.innerHTML = "Hard";
+        text.innerHTML = "Difficulty:&nbsp;&nbsp;";
+        easy.innerHTML = "&nbsp;Easy&nbsp;&nbsp;";
+        hard.innerHTML = "&nbsp;Hard";
 
         radio.setAttribute("type", "radio");
         radio2.setAttribute("type", "radio");
@@ -184,7 +211,6 @@ QuizView.prototype = {
         div.append(easy);
         div.append(radio2);
         div.append(hard);
-        div.append(document.createElement("BR"));
     },
 
     initDeleteButton: function(div) {
@@ -203,7 +229,7 @@ QuizView.prototype = {
         this.$addButton.setAttribute("id", "addBTN");
         this.$addButton.innerHTML = "Add Question";
 
-        this.$add.append(this.$addButton);
+        this.$buttons.append(this.$addButton);
     },
 
     initSave: function() {
@@ -215,14 +241,15 @@ QuizView.prototype = {
         this.$deleteQuizButton.setAttribute("class", "btn btn-primary");
         this.$deleteQuizButton.innerHTML = "Delete Quiz";
 
-        this.$save.append(this.$saveButton);
-        this.$save.append(this.$deleteQuizButton);
+        this.$buttons.append(this.$saveButton);
+        this.$buttons.append(this.$deleteQuizButton);
     },
 
     initLogout: function() {
         this.$logoutButton = document.createElement("BUTTON");
-        this.$logoutButton.setAttribute("class", "btn btn-primary");
+        this.$logoutButton.setAttribute("class", "btn btn-warning btn-sm");
         this.$logoutButton.innerHTML = "Logout";
+        this.$logoutButton.setAttribute("id", "logout");
 
         this.$logout.append(this.$logoutButton);
     },
@@ -295,7 +322,7 @@ QuizView.prototype = {
         if (!store) {
             msg = new ErrorMessage("fillInAllSave");
             this.$fillInError = msg.get();
-            this.$save.append(this.$fillInError);
+            this.$buttons.append(this.$fillInError);
         } else {
             this.storeQuizEvent.notify({
                 title: this.$titleText.value,
@@ -309,7 +336,7 @@ QuizView.prototype = {
         if (this.$dropdown.selectedIndex == 0) {
             msg = new ErrorMessage("noQuizDelete");
             this.$noQuizError = msg.get();
-            this.$save.append(this.$noQuizError);
+            this.$buttons.append(this.$noQuizError);
         } else {
             this.deleteQuizEvent.notify({
                 title: this.$titleText.value
