@@ -18,7 +18,7 @@ UserView.prototype = {
     },
 
     createChildren: function () {
-        this.$container = $('.container');
+        this.$container = $('.container-fluid');
         this.$select = this.$container.find('.select');
         this.$question = this.$container.find('.question');
         this.$buttons = this.$container.find('.buttons');
@@ -64,6 +64,7 @@ UserView.prototype = {
             }
 
             this.$dropdown = document.createElement("SELECT");
+            this.$dropdown.setAttribute("class", "dropdown");
             let selectOption = document.createElement("OPTION");
             selectOption.innerHTML = "Select";
             this.$dropdown.append(selectOption);
@@ -97,7 +98,8 @@ UserView.prototype = {
 
     initLogout: function() {
         this.$logoutButton = document.createElement("BUTTON");
-        this.$logoutButton.setAttribute("class", "btn btn-primary");
+        this.$logoutButton.setAttribute("class", "btn btn-warning btn-sm");
+        this.$logoutButton.setAttribute("id", "logout");
         this.$logoutButton.innerHTML = "Logout";
 
         this.$logout.append(this.$logoutButton);
@@ -122,6 +124,18 @@ UserView.prototype = {
         this.$title = this.$dropdown.options[this.$dropdown.selectedIndex].value;
         this.$user = this.users[this.$dropdown.selectedIndex - 1];
 
+        let head = document.createElement("P");
+        head.setAttribute("id", "quizHeader");
+        let t = document.createElement("SPAN");
+        t.setAttribute("id", "quizTitle");
+        let auth = document.createElement("SPAN");
+        t.innerHTML = this.$title + "<br>";
+        auth.innerHTML = "By " + this.$user;
+
+        head.append(t);
+        head.append(auth);
+        this.$question.append(head);
+
         this.model.retrieveQuiz.then((data) => {
             this.model.questions = data;
 
@@ -137,12 +151,18 @@ UserView.prototype = {
             for (i = 0; i < questions.length; i++)
             {
                 let d = document.createElement("DIV");
-                let q = document.createElement("SPAN");
 
+                let q = document.createElement("SPAN");
+                q.setAttribute("class", "questionText");
                 q.innerHTML = questions[i].question;
                 d.append(q);
 
                 d.append(document.createElement("BR"));
+
+                let dlvl = document.createElement("SPAN");
+                dlvl.setAttribute("class", "diffLevel");
+                dlvl.innerHTML = "Question difficulty: ";
+                d.append(dlvl);
 
                 let difficulty = "";
                 let diff = document.createElement("SPAN");
@@ -160,46 +180,62 @@ UserView.prototype = {
                 d.append(diff);
                 d.append(document.createElement("BR"));
 
+                let letter = document.createElement("SPAN");
+                letter.setAttribute("class", "letter");
+                letter.innerHTML = "a)&nbsp;";
                 let radio = document.createElement("INPUT");
                 radio.setAttribute("type", "radio");
                 radio.setAttribute("class", "radio0");
                 radio.setAttribute("name", "group" + this.radio);
                 let answer = document.createElement("SPAN");
                 answer.setAttribute("class", "answer0");
-                answer.innerHTML = questions[i].answer0;
+                answer.innerHTML = "&nbsp;" + questions[i].answer0;
+                d.append(letter);
                 d.append(radio);
                 d.append(answer);
                 d.append(document.createElement("BR"));
 
+                letter = document.createElement("SPAN");
+                letter.setAttribute("class", "letter");
+                letter.innerHTML = "b)&nbsp;";
                 radio = document.createElement("INPUT");
                 radio.setAttribute("type", "radio");
                 radio.setAttribute("class", "radio1");
                 radio.setAttribute("name", "group" + this.radio);
                 answer = document.createElement("SPAN");
                 answer.setAttribute("class", "answer1");
-                answer.innerHTML = questions[i].answer1;
+                answer.innerHTML = "&nbsp;" + questions[i].answer1;
+                d.append(letter);
                 d.append(radio);
                 d.append(answer);
                 d.append(document.createElement("BR"));
 
+                letter = document.createElement("SPAN");
+                letter.setAttribute("class", "letter");
+                letter.innerHTML = "c)&nbsp;";
                 radio = document.createElement("INPUT");
                 radio.setAttribute("type", "radio");
                 radio.setAttribute("class", "radio2");
                 radio.setAttribute("name", "group" + this.radio);
                 answer = document.createElement("SPAN");
                 answer.setAttribute("class", "answer2");
-                answer.innerHTML = questions[i].answer2;
+                answer.innerHTML = "&nbsp;" + questions[i].answer2;
+                d.append(letter);
                 d.append(radio);
                 d.append(answer);
                 d.append(document.createElement("BR"));
 
+                letter = document.createElement("SPAN");
+                letter.setAttribute("class", "letter");
+                letter.innerHTML = "d)&nbsp;";
                 radio = document.createElement("INPUT");
                 radio.setAttribute("type", "radio");
                 radio.setAttribute("class", "radio3");
                 radio.setAttribute("name", "group" + this.radio);
                 answer = document.createElement("SPAN");
                 answer.setAttribute("class", "answer3");
-                answer.innerHTML = questions[i].answer3;
+                answer.innerHTML = "&nbsp;" + questions[i].answer3;
+                d.append(letter);
                 d.append(radio);
                 d.append(answer);
                 d.append(document.createElement("BR"));
@@ -239,6 +275,12 @@ UserView.prototype = {
             }
 
             $(this.$scoreList).empty();
+
+            let scoreTitle = document.createElement("P");
+            scoreTitle.setAttribute("id", "scoreTitle");
+            scoreTitle.innerHTML = "Scores";
+            this.$scoreList.append(scoreTitle);
+
             for (i = 0; i < scoreListUsers.length; i++) {
                 let entry = document.createElement("P");
                 entry.setAttribute("class", scoreListScores[i]);
@@ -252,7 +294,7 @@ UserView.prototype = {
         $(this.$answerQError).remove();
         let answers = [];
 
-        for (i = 0; i < this.$question[0].childNodes.length; i++)
+        for (i = 1; i < this.$question[0].childNodes.length; i++)
         {
             let answer = -1;
 
@@ -278,7 +320,7 @@ UserView.prototype = {
             }
         }
 
-        if (answers.length != this.$question[0].childNodes.length) {
+        if (answers.length != this.$question[0].childNodes.length - 1) {
             msg = new ErrorMessage("answerAllQ");
             this.$answerQError = msg.get();
             this.$buttons.append(this.$answerQError);
@@ -292,14 +334,12 @@ UserView.prototype = {
             answerKey: this.$answerKey,
             questionDiv: this.$question
         });
-
-        this.getScoreList();
     },
 
     displayScore: function(score) {
         $(this.$score).empty();
         let scoreDisplay = document.createElement("P");
-        scoreDisplay.innerHTML = score;
+        scoreDisplay.innerHTML = "You scored " + score;
 
         this.$score.append(scoreDisplay);
 

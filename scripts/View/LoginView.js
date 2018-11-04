@@ -15,7 +15,7 @@ LoginView.prototype = {
     },
 
     createChildren: function () {
-        this.$container = $('.container');
+        this.$container = $('.container-fluid');
         this.$register = this.$container.find('.register');
         this.$login = this.$container.find('.login');
 
@@ -38,13 +38,11 @@ LoginView.prototype = {
     },
 
     initRegister: function() {
-        this.initUserType(0);
         this.initFields(0);
         this.initRegisterButton();
     },
 
     initLogin: function() {
-        this.initUserType(1);
         this.initFields(1);
         this.initLoginButton();
     },
@@ -56,9 +54,9 @@ LoginView.prototype = {
         let userRadio = document.createElement("INPUT");
         let user = document.createElement("SPAN");
 
-        text.innerHTML = "Select User Type:";
-        admin.innerHTML = "Admin";
-        user.innerHTML = "User";
+        text.innerHTML = "User Type:&nbsp;&nbsp;";
+        admin.innerHTML = "&nbsp;Admin&nbsp;";
+        user.innerHTML = "&nbsp;User";
 
         adminRadio.setAttribute("type", "radio");
         userRadio.setAttribute("type", "radio");
@@ -86,24 +84,36 @@ LoginView.prototype = {
 
     initFields: function(type) {
         let div = this.$login;
+        let header = document.createElement("P");
+        header.setAttribute("class", "loginHeader");
+        header.innerHTML = "Login";
 
         if (type == 0) {
             div = this.$register;
+            header.innerHTML = "Register";
             this.$name = document.createElement("INPUT");
             this.$name.setAttribute("type", "text");
             this.$name.setAttribute("placeholder", "Name (Optional)");
             this.$name.setAttribute("size", "30");
+            this.$name.setAttribute("class", "field");
+            div.append(header);
+            this.initUserType(0);
+        } else {
+            div.append(header);
+            this.initUserType(1);
         }
 
         let username = document.createElement("INPUT");
         username.setAttribute("type", "text");
         username.setAttribute("placeholder", "Username");
         username.setAttribute("size", "30");
+        username.setAttribute("class", "field");
 
         let password = document.createElement("INPUT");
         password.setAttribute("type", "password");
         password.setAttribute("placeholder", "Password");
         password.setAttribute("size", "30");
+        password.setAttribute("class", "field");
 
         if (type == 0) {
             div.append(this.$name);
