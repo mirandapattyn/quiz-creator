@@ -82,23 +82,23 @@ UserModel.prototype = {
     markIncorrect: function(qIndex, wrong, answer, div) {
         let questionList = div[0].childNodes;
         if (answer == 0) {
-            questionList[qIndex].getElementsByClassName("answer0")[0].style.backgroundColor = "green";
+            questionList[qIndex+1].getElementsByClassName("answer0")[0].style.backgroundColor = "green";
         } else if (answer == 1) {
-            questionList[qIndex].getElementsByClassName("answer1")[0].style.backgroundColor = "green";
+            questionList[qIndex+1].getElementsByClassName("answer1")[0].style.backgroundColor = "green";
         } else if (answer == 2) {
-            questionList[qIndex].getElementsByClassName("answer2")[0].style.backgroundColor = "green";
+            questionList[qIndex+1].getElementsByClassName("answer2")[0].style.backgroundColor = "green";
         } else if (answer == 3) {
-            questionList[qIndex].getElementsByClassName("answer3")[0].style.backgroundColor = "green";
+            questionList[qIndex+1].getElementsByClassName("answer3")[0].style.backgroundColor = "green";
         }
 
         if (wrong == 0) {
-            questionList[qIndex].getElementsByClassName("answer0")[0].style.backgroundColor = "red";
+            questionList[qIndex+1].getElementsByClassName("answer0")[0].style.backgroundColor = "red";
         } else if (wrong == 1) {
-            questionList[qIndex].getElementsByClassName("answer1")[0].style.backgroundColor = "red";
+            questionList[qIndex+1].getElementsByClassName("answer1")[0].style.backgroundColor = "red";
         } else if (wrong == 2) {
-            questionList[qIndex].getElementsByClassName("answer2")[0].style.backgroundColor = "red";
+            questionList[qIndex+1].getElementsByClassName("answer2")[0].style.backgroundColor = "red";
         } else if (wrong == 3) {
-            questionList[qIndex].getElementsByClassName("answer3")[0].style.backgroundColor = "red";
+            questionList[qIndex+1].getElementsByClassName("answer3")[0].style.backgroundColor = "red";
         }
     }
  };
